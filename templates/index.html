@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Mental Health Bot</title>
+</head>
+<body>
+    <h2>Mental Wellness Chat</h2>
+    <input id="input" type="text" placeholder="How are you feeling today?">
+    <button onclick="send()">Send</button>
+    <div id="chat"></div>
+
+    <script>
+        async function send() {
+            const msgInput = document.getElementById("input");
+            let msg = msgInput.value;
+            if (!msg) return;  
+
+            const response = await fetch("/chat", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ message: msg })
+            });
+
+            if (!response.ok) {
+                alert("Error: Could not reach server.");
+                return;
+            }
+
+            const data = await response.json();
+
+            
+            const chatDiv = document.getElementById("chat");
+            chatDiv.innerHTML += `<p><b>You:</b> ${msg}</p>`;
+            chatDiv.innerHTML += `<p><b>Bot:</b> ${data.response}</p>`;
+
+            msgInput.value = ""; 
+        }
+    </script>
+</body>
+</html>
